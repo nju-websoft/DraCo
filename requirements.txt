@@ -1,0 +1,6 @@
+tree-sitter
+tree-sitter-python
+transformers==4.33.3
+tiktoken
+torch
+attridict
