@@ -61,6 +61,25 @@ If you want to use local models or add other models, please modify their tokeniz
 - To make the code more intuitive and applicable to different evaluations, we return decoded prompts. 
 This operation may lead to small fluctuations in the number of tokens (usually 0~2 tokens), but please don't truncate our well-formed prompts!
 
+## Evaluation
+
+We provide a script to evaluate Code Match (exact match and edit similarity) and Identifier Match (identifier exact match and F1-score).
+
+Install the extra dependencies for evaluation:
+
+```
+cd experiments && pip install -r requirements.txt
+```
+
+```
+cd experiments && python evaluator.py --path $PRED_FILE
+```
+
+Note that we use `fuzz.ratio()` in [fuzzywuzzy](https://pypi.org/project/fuzzywuzzy) to calculate edit similarity, which is consistent with most studies such as [CodeXGLUE](https://github.com/microsoft/CodeXGLUE/blob/main/Code-Code/CodeCompletion-line/evaluator/evaluator.py), [CrossCodeEval](https://github.com/amazon-science/cceval/blob/main/scripts/eval_utils.py), and [RepoBench](https://github.com/Leolty/repobench/blob/main/evaluation/metrics.py).
+
+There is a mistake about edit similarity in our paper (Appendix C.4). Actually, it is calculated as: 
+$$ES = 1 - \frac{Lev(y, y^*)}{||y|| + ||y^*||}$$
+where Lev() is the Levenshtein distance with a substitution weight of $2$. Refer to the [implementation](https://github.com/rapidfuzz/RapidFuzz/blob/main/src/rapidfuzz/distance/Indel_py.py) details of `fuzz.ratio()`: `normalized_similarity` -> `normalized_distance` -> `distance`.
 
 ## Citation
 
